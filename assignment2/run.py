@@ -29,8 +29,15 @@ def main():
                                                  z_c, R_c, H_c,
                                                  z_r, R_r, H_r)
 
+    prob_above_line_prior = get_task_2h(x_bar, P)
+    prob_above_line_camera = get_task_2h(x_bar_c, P_c)
+    prob_above_line_radar = get_task_2h(x_bar_r, P_r)
     prob_above_line = get_task_2h(x_bar_rc, P_rc)
-    print(f"Probability that it is above x_2 = x_1 + 5 is {prob_above_line}")
+    print("Probability that it is above x_2 = x_1 + 5")
+    print(f"with just prior is {prob_above_line_prior}")
+    print(f"with camera measurement is {prob_above_line_camera}")
+    print(f"with radar measurement is {prob_above_line_radar}")
+    print(f"with both measurements fused is {prob_above_line}")
 
     interactive = InteractiveCovariance(condition_mean,
                                         condition_cov)
@@ -41,6 +48,7 @@ def main():
                         x_bar_rc, P_rc,
                         x_bar_cr, P_cr)
 
+    
     show_task_2h(x_bar_rc, P_rc)
 
     plt.show()
