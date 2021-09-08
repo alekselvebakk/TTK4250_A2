@@ -19,8 +19,9 @@ def condition_mean(x: ndarray, P: ndarray,
         cond_mean (ndarray): conditioned mean (state)
     """
 
-    # TODO replace this with your own code
-    cond_mean = solution.task2.condition_mean(x, P, z, R, H)
+    S = H@P@H.T+R
+    S_inv = np.linalg.inv(S)
+    cond_mean = x + P@H.T@S_inv@(z-H@x)
 
     return cond_mean
 
@@ -37,8 +38,9 @@ def condition_cov(P: ndarray, R: ndarray, H: ndarray) -> ndarray:
         ndarray: the conditioned covariance
     """
 
-    # TODO replace this with your own code
-    conditional_cov = solution.task2.condition_cov(P, R, H)
+    S = H@P@H.T+R
+    S_inv = np.linalg.inv(S)
+    conditional_cov = P-P@H.T@S_inv@H@P
 
     return conditional_cov
 
@@ -66,9 +68,10 @@ def get_task_2f(x_bar: ndarray, P: ndarray,
         P_r (ndarray): covariance of x_bar_r
     """
 
-    # TODO replace this with your own code
-    x_bar_c, P_c, x_bar_r, P_r = solution.task2.get_task_2f(
-        x_bar, P, z_c, R_c, H_c, z_r, R_r, H_r)
+    x_bar_c = condition_mean(x_bar, P, z_c, R_c, H_c)
+    P_c = condition_cov(P, R_c, H_c)
+    x_bar_r = condition_mean(x_bar, P, z_r, R_r, H_r)
+    P_r = condition_cov(P, R_r, H_r)
 
     return x_bar_c, P_c, x_bar_r, P_r
 
@@ -98,9 +101,10 @@ def get_task_2g(x_bar_c: ndarray, P_c: ndarray,
         P_rc (ndarray): covariance of x_bar_rc
     """
 
-    # TODO replace this with your own code
-    x_bar_cr, P_cr, x_bar_rc, P_rc = solution.task2.get_task_2g(
-        x_bar_c, P_c, x_bar_r, P_r, z_c, R_c, H_c, z_r, R_r, H_r)
+    x_bar_cr = condition_mean(x_bar_c,P_c,z_r,R_r,H_r)
+    P_cr = condition_cov(P_c,R_r,H_r)
+    x_bar_rc = condition_mean(x_bar_r,P_r,z_c,R_c,H_c)
+    P_rc = condition_cov(P_r,R_c,H_c)
 
     return x_bar_cr, P_cr, x_bar_rc, P_rc
 
@@ -116,7 +120,11 @@ def get_task_2h(x_bar_rc: ndarray, P_rc: ndarray):
         prob_above_line: the probability that the boat is above the line
     """
 
-    # TODO replace this with your own code
-    prob_above_line = solution.task2.get_task_2h(x_bar_rc, P_rc)
+    F = np.array([-1, 1])
+    print(x_bar_rc)
+    new_mean = F@x_bar_rc
+    print(new_mean)
+    new_cov = F@P_rc@F.T
+    prob_above_line = 1 - norm.cdf(5, new_mean, new_cov)
 
     return prob_above_line
