@@ -21,7 +21,8 @@ def condition_mean(x: ndarray, P: ndarray,
 
     S = H@P@H.T+R
     S_inv = np.linalg.inv(S)
-    cond_mean = x + P@H.T@S_inv@(z-H@x)
+    W = P@H.T@S_inv
+    cond_mean = x + W@(z-H@x)
 
     return cond_mean
 
@@ -40,7 +41,9 @@ def condition_cov(P: ndarray, R: ndarray, H: ndarray) -> ndarray:
 
     S = H@P@H.T+R
     S_inv = np.linalg.inv(S)
-    conditional_cov = P-P@H.T@S_inv@H@P
+    W = P@H.T@S_inv
+    I = np.eye(2)
+    conditional_cov = (I-W@H)@P
 
     return conditional_cov
 
@@ -120,11 +123,11 @@ def get_task_2h(x_bar_rc: ndarray, P_rc: ndarray):
         prob_above_line: the probability that the boat is above the line
     """
 
-    F = np.array([-1, 1])
-    print(x_bar_rc)
+    F = np.array([[-1], [1]]).T
+    print(F)
     new_mean = F@x_bar_rc
-    print(new_mean)
     new_cov = F@P_rc@F.T
-    prob_above_line = 1 - norm.cdf(5, new_mean, new_cov)
+    std_dev = np.sqrt(new_cov)
+    prob_above_line = 1 - norm.cdf(5, new_mean, std_dev)
 
     return prob_above_line

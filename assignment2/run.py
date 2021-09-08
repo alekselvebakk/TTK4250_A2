@@ -10,7 +10,7 @@ from task2 import (condition_mean, condition_cov,
 def main():
     # %% initialize the values
     x_bar = np.zeros(2)  # initial estimate
-    P = 25 * np.eye(2)  # covariance of initial estimate
+    P = 25 * np.eye(2)  # covariance of     initial estimate
 
     z_c = np.array([2, 14])  # measurement 1
     R_c = np.array([[79, 36], [36, 36]])  # covariance of measurement 1
