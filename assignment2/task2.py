@@ -124,7 +124,6 @@ def get_task_2h(x_bar_rc: ndarray, P_rc: ndarray):
     """
 
     F = np.array([[-1], [1]]).T
-    print(F)
     new_mean = F@x_bar_rc
     new_cov = F@P_rc@F.T
     std_dev = np.sqrt(new_cov)
